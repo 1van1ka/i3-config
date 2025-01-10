@@ -1,0 +1,40 @@
+*{
+	font-family: "JetBrains Mono";
+}
+
+window {
+	background-color: rgba(12, 12, 12, 0.9);
+}
+
+button {
+	border-radius: 55px;
+	text-decoration: none;
+	font-size: 30px;
+	font-weight: 600;
+	color: #FFFFFF;
+	background-color: #1E1E1E;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 30%;
+	margin:110px 20px 110px 20px;
+	outline-style: hidden;
+}
+
+button:hover {
+	background-color: #002791;
+	background-size: 40%;
+	margin: 100px 35px 100px 35px;
+}
+
+#suspend {
+	background-image: url("/usr/share/wlogout/icons/suspend.png"), url("/usr/local/share/wlogout/icons/suspend.png");
+}
+
+#shutdown {
+	background-image: url("/usr/share/wlogout/icons/shutdown.png"), url("/usr/local/share/wlogout/icons/shutdown.png");
+}
+
+#reboot {
+	background-image: url("/usr/share/wlogout/icons/reboot.png"), url("/usr/local/share/wlogout/icons/reboot.png");
+}
+

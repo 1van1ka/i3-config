@@ -1,0 +1,3 @@
+#!/bin/bash
+
+paplay --volume 55000 ~/.config/dunst/scripts/sound.wav

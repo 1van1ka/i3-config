@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if nmcli -t -f DEVICE,TYPE,STATE device | grep wireguard | grep connected > /dev/null; then
+	echo "%{F#0a8a01}●%{F-}"
+else
+	echo "●"
+fi
+
+
+
+
+#fc0303 - red
+
+#18bd06 - green

@@ -1,0 +1,74 @@
+
+#!/usr/bin/env bash
+
+WG_CONFIG_DIR="/home/user/Downloads/"
+
+get_sudo_password() {
+  password=$(echo -n '' | rofi -password -dmenu -p 'Input password')
+  fl=$(echo "$password" | sudo -S /bin/true)
+
+  if [ $fl -ne 0 ]; then
+    notify-send "Uncorrect password"
+    exit 1
+  fi
+  notify-send "Password verified"
+  echo "$password"
+}
+
+is_wireguard_running() {
+    echo "$sudo_password" | sudo -S wg show > /dev/null 2>&1
+    return $?
+}
+
+get_wireguard_interfaces() {
+    echo "$sudo_password" | sudo -S wg show | awk '/interface:/ {print $2}'
+}
+
+sudo_password=$(get_sudo_password)
+
+active_interfaces=""
+if is_wireguard_running; then
+    active_interfaces=$(get_wireguard_interfaces)
+    echo "Активные интерфейсы WireGuard:"
+fi
+
+configs=("Disable WireGuard" "$WG_CONFIG_DIR"*.conf)
+if [ ${#configs[@]} -eq 0 ]; then
+    echo "Нет доступных конфигураций WireGuard."
+    exit 1
+fi
+
+selected_file=$(printf '%s\n' "${configs[@]}" | rofi -dmenu -p "Select WireGuard configuration")
+if [ -z "$selected_file" ]; then
+    echo "Конфигурация не выбрана."
+    exit 1
+fi
+
+selected_file_basename=$(basename "$selected_file")
+
+if [[ $selected_file_basename == "Disable WireGuard" ]]; then
+    if [ -n "$active_interfaces" ]; then
+        for iface in $active_interfaces; do
+            echo "$sudo_password" | sudo -S wg-quick down "$WG_CONFIG_DIR$iface.conf" 
+        done
+        notify-send "WireGuard disabled."
+    else
+        notify-send "WireGuard is already disabled."
+    fi
+    exit 1
+elif [[ $active_interfaces == "$selected_file_basename" ]]; then
+    notify-send "Active: $selected_file_basename"
+    exit 1
+else
+    if [ -n "$active_interfaces" ]; then
+        for iface in $active_interfaces; do
+            echo "$sudo_password" | sudo -S wg-quick down "$WG_CONFIG_DIR$iface.conf" 
+        done
+    echo "$sudo_password" | sudo -S wg-quick up "$selected_file" && notify-send "Reconnection successful!" "$selected_file_basename"
+    exit 1
+    fi
+    
+    if [ -z "$active_interfaces" ]; then
+     echo "$sudo_password" | sudo -S wg-quick up "$selected_file" && notify-send "Connection successful!" "$selected_file_basename"
+    fi
+fi

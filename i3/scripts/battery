@@ -1,0 +1,72 @@
+#!/bin/env python
+
+import subprocess
+
+def is_charging() -> int:
+    result = subprocess.run(
+        ["cat", "/sys/class/power_supply/BAT0/status"],
+        capture_output=True, text=True, check=True
+    )
+    charge_status = result.stdout.strip()
+    if charge_status == "Charging":
+        return 1
+    if charge_status == "Discharging":
+        return -1
+    else:
+        return 0
+
+
+def capacity() -> int:
+    result = subprocess.run([
+        "cat", "/sys/class/power_supply/BAT0/capacity"],
+        capture_output=True, text=True, check=True
+    )
+    capacity_level = int(result.stdout.strip())
+    return capacity_level
+
+def current_now() -> float:
+    result = subprocess.run(
+        ["cat", "/sys/class/power_supply/BAT0/current_now"],
+        capture_output=True, text=True, check=True
+    )
+    charge_status = int(result.stdout.strip())/1000000
+    return charge_status
+
+
+def voltage_now() -> float:
+    result = subprocess.run([
+        "cat", "/sys/class/power_supply/BAT0/voltage_now"],
+        capture_output=True, text=True, check=True
+    )
+    capacity_level = int(result.stdout.strip())/1000000
+    return capacity_level
+
+
+def full_charge() -> float:
+    result = subprocess.run([
+        "cat", "/sys/class/power_supply/BAT0/charge_full"],
+        capture_output=True, text=True, check=True
+    )
+    capacity_level = int(result.stdout.strip())/1000000
+    return capacity_level
+
+
+def main() -> None:
+    capacity_lev = capacity()
+    print(voltage_now() * current_now())
+
+    if is_charging() == -1:
+        time = voltage_now() * full_charge() / (voltage_now() * current_now())
+        time_now = f"{round(time)}:{abs(round((time - round(time)) * 60)):.0f}"
+        print(f"{capacity_lev}% {time_now}")
+
+    if is_charging() == 1:
+        print(f"C {capacity_lev}% {voltage_now() * current_now():.2f}W")
+
+    if not is_charging():
+        print(f"{capacity_lev}%")
+
+
+
+if __name__ == "__main__":
+    main()

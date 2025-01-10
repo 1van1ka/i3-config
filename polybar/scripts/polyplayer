@@ -1,0 +1,50 @@
+#!/bin/sh
+
+PLAYER="chromium"
+
+is_playing() {
+    if playerctl --player=$PLAYER status 2>&1 | grep Playing > /dev/null; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+is_paused() {
+    if playerctl --player=$PLAYER status 2>&1 | grep Paused > /dev/null; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+play_pause() {
+    if is_playing; then
+        echo 
+    else
+        echo 
+    fi
+}
+
+case $1 in 
+  previous)
+    is_playing && playerctl --player=$PLAYER previous 
+    ;;
+  next)
+    is_playing && playerctl --player=$PLAYER next
+    ;;
+  play-pause)
+    (is_paused || is_playing) && playerctl --player=$PLAYER play-pause && play_pause
+    ;;
+  title)
+    if is_playing || is_paused; then
+        echo $(playerctl --player=$PLAYER metadata --format '{{ artist }}: {{ title }}')
+    else
+        echo "YoutubeMusic not active. VPN"
+        exit 1
+    fi
+    ;;
+  play_pause)
+    play_pause
+    ;;
+esac
