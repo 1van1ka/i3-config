@@ -1,0 +1,24 @@
+#!/bin/bash
+
+desired_length=5
+
+memtotal=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
+memavail=$(awk '/MemAvailable/ {print $2}' /proc/meminfo)
+free_memory_percent=$((100 * ($memtotal - $memavail) / $memtotal))
+
+format_output() {
+    local text="$1"
+    local text_length=${#text}
+    if [ $text_length -lt $desired_length ]; then
+        local total_padding=$((desired_length - text_length))
+        local left_padding=$((total_padding / 2))
+        local right_padding=$((total_padding - left_padding))
+        printf "%${left_padding}s%s%${right_padding}s\n" "" "$text" ""
+    else
+        echo "$text"
+    fi
+}
+
+output="󰍛 $free_memory_percent%"
+
+format_output "$output"

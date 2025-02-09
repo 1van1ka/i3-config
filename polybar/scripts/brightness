@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [[ "$1" -eq 2 ]]; then
+    ~/.config/i3/scripts/brightness 1 2
+elif [[ "$1" -eq 3 ]]; then
+    ~/.config/i3/scripts/brightness -1 2
+fi
+
+brightness=$(cat /sys/class/backlight/*/brightness)
+max_brightness=$(cat /sys/class/backlight/*/max_brightness)
+percent=$(echo "$brightness * 100 / $max_brightness" | bc)
+
+if [[ ${percent} -lt 10 ]]; then
+    echo " min"
+elif [[ ${percent} -eq 100 ]]; then
+    echo " max"
+else
+    echo " ${percent}%"
+fi

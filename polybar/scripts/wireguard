@@ -1,0 +1,10 @@
+#!/bin/bash
+
+status=$(nmcli connection show --active | awk '/wireguard/ {print $1}')
+
+if [ -n "$status" ];then
+    echo " ";
+else
+    echo " ";
+fi
+

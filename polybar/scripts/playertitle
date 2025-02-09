@@ -1,0 +1,38 @@
+#!/bin/bash
+
+PLAYER="chromium"
+length=22
+
+is_playing() {
+    playerctl --player="$PLAYER" status 2>&1 | grep -q "Playing"
+}
+
+is_paused() {
+    playerctl --player="$PLAYER" status 2>&1 | grep -q "Paused"
+}
+
+while :; do
+    for (( i=0; ; i++ )); do
+        if is_playing || is_paused; then
+            text="   $(playerctl --player=$PLAYER metadata --format '{{ artist }}: {{ title }}')"
+        else
+            text="  YoutubeMusic don't work"
+        fi
+        
+        text="$text $text"
+        current_text="${text:i:length}"
+
+        if [[ ${#current_text} -lt $length ]]; then
+            current_text+="${text:0:length-${#current_text}}"
+        fi
+
+        echo -ne "\n$current_text"
+        
+        sleep 0.6
+        
+        if (( i >= ${#text} )); then
+            i=0
+        fi
+    done
+done
+

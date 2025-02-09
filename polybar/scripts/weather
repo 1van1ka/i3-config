@@ -1,0 +1,46 @@
+#!/bin/env python
+from typing import Literal
+
+import requests
+import geocoder
+import os
+
+def location() -> dict[Literal["lat"] | Literal["lon"], str]:
+    g = geocoder.ip('me')
+    
+    return {'lat': g.latlng[0],
+            'lon': g.latlng[1]}
+
+    
+
+def response(lat: str, lon: str) -> dict:
+    URL = f"http://api.weatherapi.com/v1/current.json?key=a4900ab676174aa59ae91816242710&q={lat},{lon}"
+    req = requests.get(url=URL).json()
+
+    temp = req['current']['temp_c']
+    temp_feel = req['current']['feelslike_c']
+    city = req['location']['name']
+    condition = req['current']['condition']['text']
+    humidity = req['current']['humidity']
+
+    return {'temp': temp,
+            'temp_f': temp_feel,
+            'city': city,
+            'condition': condition,
+            'humidity': humidity
+            }
+
+def formatter(temp:str, temp_f:str, city:str, condition:str, humidity:str) -> str:
+    text = f"city: {city}\ntemp: {temp}({temp_f})\ncondition: {condition}\nhumidity: {humidity}%"
+    return text
+
+
+def main(): 
+    coord = location()
+    req = response(lat=coord['lat'], lon=coord['lon'])
+    text = formatter(temp=req['temp'], temp_f=req['temp_f'], city=req['city'], condition=req['condition'], humidity=req['humidity'])
+
+    os.system(f"notify-send --app-name weather '{text}' --expire-time 20000")
+
+if __name__ == "__main__":
+    main()

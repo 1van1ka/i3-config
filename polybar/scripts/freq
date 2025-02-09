@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo $(cpupower frequency-info | grep 'current CPU frequency' | grep 'Hz' | awk '{print $4, $5}')

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+connections=$(nmcli --fields "NAME,TYPE,DEVICE" connection show --active)
+wifi=$(echo "$connections" | awk '/wlp/ {print $1}')
+ethernet=$(echo "$connections" | awk '/ethernet/ {print $1, $3}')
+
+if [ -n "$ethernet" ]; then 
+    text=" "
+elif [ -n "$wifi" ]; then
+    text="󱚽 " 
+else
+    text="󰅛 "
+fi
+
+echo "$text"

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [[ "$1" -eq 1 ]]; then
+    amixer -q sset Master toggle
+elif [[ "$1" -eq 2 ]]; then
+    ~/.config/i3/scripts/audio 1 2
+elif [[ "$1" -eq 3 ]]; then
+    ~/.config/i3/scripts/audio -1 2
+fi
+
+statusLine=$(amixer get Master | tail -n 1)
+status=$(echo "${statusLine}" | grep -wo "on")
+volume=$(echo "${statusLine}" | awk '{print $5}' | tr -d '[]%')
+
+
+if [[ $volume -eq 100 ]]; then
+    text="max"
+elif [[ $volume -lt 10 ]]; then
+    text="min"
+else
+    text="${volume}%"
+fi
+
+if [[ -z "${status}" ]]; then
+    text="%{F#757575}$text%{F-}"
+fi
+
+echo "󰕾 $text"

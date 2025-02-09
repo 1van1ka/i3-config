@@ -1,0 +1,54 @@
+#!/bin/bash
+# Source: http://askubuntu.com/a/450136
+
+URGENT_VALUE=90
+
+PREV_TOTAL=0
+PREV_IDLE=0
+
+cpuFile="/tmp/.cpu"
+
+if [[ -f "${cpuFile}" ]]; then
+  fileCont=$(cat "${cpuFile}")
+  PREV_TOTAL=$(echo "${fileCont}" | head -n 1)
+  PREV_IDLE=$(echo "${fileCont}" | tail -n 1)
+fi
+
+CPU=(`cat /proc/stat | grep '^cpu '`)
+unset CPU[0]
+IDLE=${CPU[4]}
+
+TOTAL=0
+
+for VALUE in "${CPU[@]:0:4}"; do
+  let "TOTAL=$TOTAL+$VALUE"
+done
+
+format_output() {
+  desired_length=6
+    local text="$1"
+    local text_length=${#text}
+    if [ $text_length -lt $desired_length ]; then
+        local total_padding=$((desired_length - text_length))
+        local right_padding=$((total_padding / 2))
+        local left_padding=$((total_padding - right_padding))
+        printf "%${left_padding}s%s%${right_padding}s\n" "" "$text" ""
+    else
+        echo "$text"
+    fi
+}
+
+if [[ "${PREV_TOTAL}" != "" ]] && [[ "${PREV_IDLE}" != "" ]]; then
+  let "DIFF_IDLE=$IDLE-$PREV_IDLE"
+  let "DIFF_TOTAL=$TOTAL-$PREV_TOTAL"
+  let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/$DIFF_TOTAL+5)/10"
+  output="󰻠 ${DIFF_USAGE}%"
+else
+  output="?"
+fi
+
+format_output "$output"
+
+echo "${TOTAL}" > "${cpuFile}"
+echo "${IDLE}" >> "${cpuFile}"
+

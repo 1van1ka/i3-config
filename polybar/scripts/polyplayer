@@ -1,6 +1,7 @@
 #!/bin/sh
 
 PLAYER="chromium"
+len=13
 
 is_playing() {
     if playerctl --player=$PLAYER status 2>&1 | grep Playing > /dev/null; then
@@ -38,11 +39,11 @@ case $1 in
     ;;
   title)
     if is_playing || is_paused; then
-        echo $(playerctl --player=$PLAYER metadata --format '{{ artist }}: {{ title }}')
+        text="$(playerctl --player="$PLAYER" metadata --format '{{ artist }}: {{ title }}')"
     else
-        echo "YoutubeMusic not active. VPN"
-        exit 1
+        text="YoutubeMusic"
     fi
+    printf "%-${len}.${len}s" "$text"
     ;;
   play_pause)
     play_pause
