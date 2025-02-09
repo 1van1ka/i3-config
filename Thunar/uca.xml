@@ -15,12 +15,13 @@
 <action>
 	<icon></icon>
 	<name>Compress files</name>
-	<submenu></submenu>
+	<submenu>Archive</submenu>
 	<unique-id>1737380513008755-1</unique-id>
-	<command>~/.config/Thunar/scripts/compressFiles %F</command>
+	<command>~/.config/Thunar/scripts/compressFiles %N</command>
 	<description>This command of compressing files to format is zip</description>
 	<range></range>
 	<patterns>*</patterns>
+	<directories/>
 	<audio-files/>
 	<image-files/>
 	<other-files/>
@@ -30,9 +31,9 @@
 <action>
 	<icon></icon>
 	<name>Extract archive </name>
-	<submenu></submenu>
+	<submenu>Archive</submenu>
 	<unique-id>1737382437587435-2</unique-id>
-	<command>/home/user/.config/Thunar/scripts/extractArchive %n</command>
+	<command>~/.config/Thunar/scripts/extractArchive %n</command>
 	<description></description>
 	<range>*</range>
 	<patterns>*.zip</patterns>

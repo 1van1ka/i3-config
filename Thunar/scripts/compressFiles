@@ -2,7 +2,7 @@
 
 N=$(zenity --entry --title="Введите название архива" --text="Введите имя архива (без .zip):")
 if [ -n "$N" ]; then
-    zip -9 "${N}.zip" 2024-12-03_1276x704.png 2024-12-03_1284x692.png
+    zip -9 "${N}.zip" $@
 else
-    echo "Имя архива не было введено."
+    notify-send -a 'compress files' 'no archive name'
 fi

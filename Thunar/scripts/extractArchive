@@ -2,7 +2,7 @@
 
 ARCHIVE=$1
 if [ -n "$ARCHIVE" ]; then
-    FOLDER_NAME=$(basename "$ARCHIVE" .zip)    
+    FOLDER_NAME=$(basename "$ARCHIVE" .zip)
     mkdir -p "$FOLDER_NAME"
     unzip "$ARCHIVE" -d "$FOLDER_NAME"
 fi
