@@ -1,17 +1,6 @@
 corner-radius = 0;
 round-borders = 0;
 
-shadow = true;
-shadow-radius = 15;
-shadow-offset-x = -8;
-shadow-offset-y = -8;
-shadow-opacity = 0.2;
-shadow-exclude = [
-	"_GTK_FRAME_EXTENTS@:c",
-	"class_g = 'Polybar'",
-	"class_g = 'conky'"
-];
-
 
 fading = true;
 fade-in-step = 0.05;
@@ -42,15 +31,6 @@ opacity-rule = [
 	"80:class_g	= 'slop'",
 ];
 
-blur: {
-	method = "dual_kawase";
-	strength = 0;
-}
-blur-background-exclude = [
-	"_GTK_FRAME_EXTENTS@:c",
-	"class_g = 'Maim'",
-	"class_g = 'conky'"
-];
 
 backend = "glx";
 vsync = true;
