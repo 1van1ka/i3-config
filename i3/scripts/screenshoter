@@ -1,0 +1,18 @@
+#!/bin/bash
+
+name=$(date +%Y-%m-%d_%H-%M-%S)
+
+if [[ "$1" = "area" ]]; then
+    import ~/Pictures/Screenshots/$name.png 
+    if [[ -e ~/Pictures/Screenshots/$name.png ]]; then
+        notify-send -a 'screenshoter' 'screen area' -t 1500
+    fi
+
+elif [[ "$1" = "window" ]]; then 
+    import -window $(xdotool getactivewindow) ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png
+    notify-send -a 'screenshoter' 'window' -t 1500
+
+elif [[ "$1" = "full" ]]; then 
+    import -window root ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png
+    notify-send -a 'screenshoter' 'full screen' -t 1500
+fi

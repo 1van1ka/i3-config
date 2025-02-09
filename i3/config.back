@@ -1,33 +1,17 @@
 set $mod Mod4
 
-font pango:monospace 13
-
-# bar {
-#         status_command i3blocks
-#         position top
-#         height 21
-#         colors {
-#                 background #2F2F2F
-#                 statusline #eeeeee
-#                 separator #c2c0c0
-# 
-#                 focused_workspace #ad0000 #000000 #ffffff
-#                 active_workspace #2F2D3A #2F2F2F #ffffff
-#                 inactive_workspace #2F2F2F #2F2F2F #6b6a6a
-#                 urgent_workspace #4A4A4A #4A4A4A #a9a9a9
-#         }
-# }
-
 
 #--- autostart ---------------------------------------------------
-exec --no-startup-id dex --autostart --environment i3
 exec dunst &
-exec --no-startup-id ~/.fehbg
-# exec --no-startup-id picom --config ~/.config/picom
+exec --no-startup-id feh --bg-scale ~/.config/i3/wallpapers/7.jpg
+exec --no-startup-id picom --config ~/.config/picom/picom
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id polybar
 exec --no-startup-id telegram-desktop -startintray
 exec --no-startup-id blueman-tray
 exec --no-startup-id ~/.config/i3/scripts/BatteryAlert
+
 
 # Position workspaces on motitors
 workspace 1 output eDP-1
@@ -51,18 +35,17 @@ assign [class="com.github.th_ch.youtube_music"] $ws7
 
 
 
-# #--- applications ----------------------------------------
-for_window [class="vlc"] floating enable
-for_window [class="vlc"] resize set 900 600
-for_window [class="vlc"] move absolute position center
-
-for_window [class="Thunar"] floating enable
-for_window [class="Thunar"] resize set 1000 600
-for_window [class="Thunar"] move absolute position center
-for_window [class="Thunar"] focus
+# #--- floating applications ----------------------------------------
+# for_window [class="Lutris"] floating enable
+# for_window [class="Lutris"] resize set 1200 700
+# for_window [class="Lutris"] move absolute position center
 
 # for_window [class="TelegramDesktop"] floating enable
 # for_window [class="TelegramDesktop"] move absolute position center
+
+# for_window [class="firefox"] floating enable
+# for_window [class="firefox"] resize set 1800 1000
+# for_window [class="firefox"] move absolute position center
 
 # for_window [class="Viewnior"] floating enable
 # for_window [class="Viewnior"] move absolute position center
@@ -76,8 +59,10 @@ for_window [class="Thunar"] focus
 # #--- focus in appps -----------------------------
 # for_window [class="Lutris"] focus
 
+
+
 #--- gaps -------------------------------------------------------
-gaps inner 12
+gaps inner 10
 gaps outer -7
 smart_gaps off
 
@@ -97,7 +82,7 @@ for_window [floating] border pixel 2
 #--- smart borders off ---------------
 smart_borders on
 #                       Рамка   Фон   Индикатор Родительская_рамка
-client.focused                  #e1e2e6 #db1904 #e1e2e6 #e1e2e6
+client.focused                  #e1e2e6 #A80000 #e1e2e6 #e1e2e6
 client.focused_inactive         #292c37 #292c37 #292c37 #292c37
 client.unfocused                #292c37 #292c37 #292c37 #292c37
 client.urgent                   #292c37 #292c37 #292c37 #292c37
@@ -106,14 +91,14 @@ client.placeholder              #292c37 #292c37 #292c37 #292c37
 
 
 #--- laptop binds -----------------------------------
-bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.config/i3/scripts/audio 1 2
-bindsym XF86AudioLowerVolume exec --no-startup-id ~/.config/i3/scripts/audio -1 2
-bindsym XF86AudioMute exec --no-startup-id ~/.config/i3/scripts/audio 0 
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ mode_toggle
+set $refresh_i3status killall -SIGUSR1 i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +2% && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -2% && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
-bindsym XF86MonBrightnessUp exec --no-startup-id ~/.config/i3/scripts/brightness 1 2
-bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/scripts/brightness -1 2
-
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set 2%+
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 2%-
 
 floating_modifier $mod
 
@@ -122,22 +107,23 @@ floating_modifier $mod
 tiling_drag modifier titlebar
 
 
+
 #--- binds to start applications -------------------------------------------
 bindsym $mod+Return exec --no-startup-id kitty
-bindsym $mod+d exec --no-startup-id dmenu_run
+bindsym $mod+d exec --no-startup-id rofi -show drun
+bindsym $mod+n exec --no-startup-id nemo
+bindsym $mod+i exec --no-startup-id inkscape
 bindsym $mod+b exec --no-startup-id firefox
+bindsym $mod+g exec --no-startup-id lutrisc
 bindsym $mod+o exec --no-startup-id wlogout
 bindsym $mod+e exec --no-startup-id thunar
-bindsym $mod+Shift+p exec --no-startup-id kitty ~/.config/i3/scripts/WG_gui_py
-bindsym $mod+p exec --no-startup-id lxrandr
-bindsym $mod+m exec --no-startup-id ~/.config/i3/scripts/notifier
-bindsym $mod+n exec --no-startup-id killall polybar && polybar
+bindsym $mod+Shift+w exec --no-startup-id ~/.config/i3/scripts/Wi-Fi_gui > log_wifi
+bindsym $mod+Shift+p exec --no-startup-id ~/.config/i3/scripts/WG_gui >> log
+#bindsym $mod+p exec --no-startup-id kitty ~/.config/i3/scripts/WG_gui_py
 
 
-bindsym Shift+Print exec ~/.config/i3/scripts/screenshoter area
-bindsym $mod+Print exec ~/.config/i3/scripts/screenshoter window
-bindsym $mod+Shift+Print exec ~/.config/i3/scripts/screenshoter full
-
+bindsym Shift+Print exec import ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png
+bindsym $mod+Print exec import -window $(xdotool getactivewindow) ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png
 
 bindsym $mod+q kill
 bindsym $mod+Shift+q exec --no-startup-id xdotool getactivewindow getwindowpid $(xdotool getactivewindow) | xargs kill
@@ -181,6 +167,7 @@ bindsym $mod+f fullscreen toggle
 
 #--- toogle to floating mode -------------------------
 bindsym $mod+Shift+V floating toggle
+
 bindsym $mod+V focus mode_toggle
 
 
@@ -247,10 +234,10 @@ bindsym $mod+r mode "resize"
 
 mode "resize" {
 
-        bindsym l resize shrink width 1 px or 1 ppt
-        bindsym j resize grow height 1 px or 1 ppt
-        bindsym k resize shrink height 1 px or 1 ppt
-        bindsym h resize grow width 1 px or 1 ppt
+        bindsym l resize shrink width 5 px or 10 ppt
+        bindsym j resize grow height 51 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym h resize grow width 10 px or 10 ppt
 
         bindsym Return mode "default"
         bindsym Escape mode "default"

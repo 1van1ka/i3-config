@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+<action>
+	<icon>utilities-terminal</icon>
+	<name>Open Terminal Here</name>
+	<submenu></submenu>
+	<unique-id>1733247480981376-1</unique-id>
+	<command>/usr/bin/kitty %f</command>
+	<description></description>
+	<range></range>
+	<patterns>*</patterns>
+	<startup-notify/>
+	<directories/>
+</action>
+<action>
+	<icon></icon>
+	<name>Compress files</name>
+	<submenu></submenu>
+	<unique-id>1737380513008755-1</unique-id>
+	<command>~/.config/Thunar/scripts/compressFiles %F</command>
+	<description>This command of compressing files to format is zip</description>
+	<range></range>
+	<patterns>*</patterns>
+	<audio-files/>
+	<image-files/>
+	<other-files/>
+	<text-files/>
+	<video-files/>
+</action>
+<action>
+	<icon></icon>
+	<name>Extract archive </name>
+	<submenu></submenu>
+	<unique-id>1737382437587435-2</unique-id>
+	<command>/home/user/.config/Thunar/scripts/extractArchive %n</command>
+	<description></description>
+	<range>*</range>
+	<patterns>*.zip</patterns>
+	<other-files/>
+</action>
+</actions>

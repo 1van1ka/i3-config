@@ -1,0 +1,12 @@
+#!/bin/bash
+
+status=$(dunstctl get-pause-level)
+
+if [[ $status -eq "0" ]]; then
+    notify-send -a notifier "notifications will be disabled in 2 seconds" -t 2000
+    sleep 2    
+    dunstctl set-paused toggle
+else 
+    dunstctl set-paused toggle
+    notify-send -a notifier "notifications enabled"
+fi
