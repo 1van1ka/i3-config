@@ -1,0 +1,157 @@
+{
+	// 为 `IDE` 提供代码智能
+	"$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+	"logo": {
+		"padding": { "right": 1 },
+		"printRemaining": true,
+		// 如果为 `top` 则在 `logo` 底部打印 `modules`
+		// 这或许对竖屏显示设备更友好
+		"position": "left",
+	},
+	"general": { "multithreading": true },
+	"display": {
+		"stat": false,
+		"showErrors": false,
+		"disableLinewrap": true,
+		"hideCursor": true,
+		"separator": "",
+		"brightColor": false,
+		"key": {
+			"width": 21,
+			"type": "string",
+		},
+		"size": {
+			// "iec" => 1024 Bytes = 1 KiB, 1024 KiB = 1 MiB, ... (standard)
+			// "si"  => 1000 Bytes = 1 KB, 1000 KB = 1 MB, ...
+			"binaryPrefix": "iec",
+			"ndigits": 2,
+		},
+		"temp": {
+			// "CELSIUS",    "C" => 摄氏度
+			// "FAHRENHEIT", "F" => 华氏度
+			// "KELVIN",     "K" => 开尔文
+			"unit": "C",
+			"ndigits": 2,
+			// 这里 `Green`, `Yellow`, `Red` 并不代表 RGB 值，是指值的危险程度对应的颜色
+			"color": {
+				"green": "\u001b[38;2;0;255;0",
+				"yellow": "\u001b[1;38;2;255;255;0",
+				"red": "\u001b[1;38;2;255;0;0",
+			},
+		},
+		"bar": {
+			"charElapsed": "=",
+			"charTotal": "-",
+			"width": 30,
+		},
+		"percent": {
+			"type": 3,
+			"ndigits": 2,
+			"color": {
+				"green": "\u001b[38;2;0;255;0",
+				"yellow": "\u001b[1;38;2;255;255;0",
+				"red": "\u001b[1;38;2;255;0;0",
+			},
+		},
+	},
+	"modules": [
+		{
+			"type": "os",
+			"key": " os",
+			"keyColor": "\u001b[38;2;0;192;255",
+		},
+		{
+			"type": "kernel",
+			"key": "   Kernel",
+			"keyColor": "\u001b[38;2;0;192;255",
+			"format": "{2} {4}",
+		},
+		{
+			"type": "initsystem",
+			"key": "  󰿄 InitSystem",
+			"keyColor": "\u001b[38;2;0;192;255",
+		},
+		{
+			"type": "bootmgr",
+			"key": "   BootMgr",
+			"keyColor": "\u001b[38;2;0;192;255",
+		},
+		{
+			"type": "packages",
+			"key": "  󰏖 Packages",
+			"keyColor": "\u001b[38;2;0;192;255",
+		},
+		{
+			"type": "uptime",
+			"key": "   Uptime",
+			"keyColor": "\u001b[38;2;0;192;255",
+		},
+		{
+			"type": "terminal",
+			"key": "   Terminal",
+			"keyColor": "\u001b[38;2;0;192;255",
+			"format": "{5} (\u001b[0;38;2;0;255;0m{6}\u001b[0m)",
+		},
+		{
+			"type": "shell",
+			"key": "     Shell",
+			"keyColor": "\u001b[38;2;0;192;255",
+			"format": "{6} (\u001b[0;38;2;0;255;0m{4}\u001b[0m)",
+		},
+		{
+			"type": "wm",
+			"key": " WM",
+			"keyColor": "\u001b[38;2;255;175;0",
+		},
+		{
+			"type": "lm",
+			"key": "  󰧨 LM",
+			"keyColor": "\u001b[38;2;255;175;0",
+		},
+		{
+			"type": "theme",
+			"key": "  󰉼 Theme",
+			"keyColor": "\u001b[38;2;255;175;0",
+		},
+		{
+			"type": "font",
+			"key": "   Font",
+			"keyColor": "\u001b[38;2;255;175;0",
+		},
+		{
+			"type": "board",
+			"key": " Board",
+			"keyColor": "\u001b[38;2;0;255;175",
+		},
+		{
+			"type": "bios",
+			"key": "   BIOS",
+			"keyColor": "\u001b[38;2;0;255;175",
+			"format": "{5} - {4} (\u001b[0;38;2;0;255;0m{2}\u001b[0m)",
+		},
+		{
+			"type": "cpu",
+			"key": "  󰻠 CPU",
+			"keyColor": "\u001b[38;2;0;255;175",
+			"format": "{1}",
+			"temp": true,
+		},
+		{
+			"type": "gpu",
+			"key": "  󰾲 GPU",
+			"keyColor": "\u001b[38;2;0;255;175",
+			"format": "{2}",
+			"temp": true,
+		},
+		{
+			"type": "memory",
+			"key": "   Memory",
+			"keyColor": "\u001b[38;2;0;255;175",
+		},
+		{
+			"type": "swap",
+			"key": "  󰓡 Swap",
+			"keyColor": "\u001b[38;2;0;255;175",
+		},
+	],
+}
