@@ -1,10 +1,39 @@
 #!/bin/bash
 
-if [[ "$1" -eq 1 ]]; then
-    amixer -q sset Master "$2"%+ > /dev/null
-elif [[ "$1" -eq 0 ]]; then
-    amixer -q sset Master toggle > /dev/null
-elif [[ "$1" -eq -1 ]]; then
-    amixer -q sset Master "$2"%- > /dev/null
-fi
+device="$1"
+volumesp=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2 * 100)}')
+volumemic=$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | awk '{print int($2 * 100)}')
+step="2"
 
+
+if [[ "$device" == "speaker" ]]; then
+    if [[ "$2" -eq 1 && $volumesp -lt 120 ]]; then
+        wpctl set-volume @DEFAULT_AUDIO_SINK@ "$step"%+ > /dev/null
+        exit 0
+
+    elif [[ "$2" -eq 0 ]]; then
+        wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle > /dev/null
+        exit 0
+
+    elif [[ "$2" -eq -1 ]]; then
+        wpctl set-volume @DEFAULT_AUDIO_SINK@ "$step"%- > /dev/null
+        exit 0
+    fi
+
+
+elif [[ "$device" == "micro" ]]; then
+
+    if [[ "$2" -eq 1 && $volumemic -lt 100 ]]; then
+        wpctl set-volume @DEFAULT_AUDIO_SOURCE@ "$step"%+ > /dev/null
+        exit 0
+
+    elif [[ "$2" -eq 0 ]]; then
+        wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle > /dev/null
+        exit 0
+
+    elif [[ "$2" -eq -1 ]]; then
+        wpctl set-volume @DEFAULT_AUDIO_SOURCE@ "$step"%- > /dev/null
+        exit 0
+    fi
+
+fi

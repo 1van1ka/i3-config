@@ -35,15 +35,19 @@ def main() -> None:
     capacity_level = capacity()
     charging_status = is_charging()
 
-
     path = os.path.expanduser("~/.config/i3/scripts/Battery")
 
-    with open(os.path.join(path, "lastcapacity"), "r") as f:
-        last_capacity_level = int(f.read().strip())
-    
-    with open(os.path.join(path, "laststatus"), "r") as f:
-        last_status = int(f.read().strip())
+    try:
+        with open(os.path.join(path, "lastcapacity"), "r") as f:
+            last_capacity_level = int(f.read().strip())
+    except (ValueError, FileNotFoundError) as e:
+        last_capacity_level = capacity_level
 
+    try:
+        with open(os.path.join(path, "laststatus"), "r") as f:
+            last_status = int(f.read().strip())
+    except (ValueError, FileNotFoundError) as e:
+        last_status = 1
 
     dict_status = {
         -1: "Discharging",
@@ -55,7 +59,6 @@ def main() -> None:
         notify_user(level="low", message=f"The battery is {dict_status[charging_status]}")
         with open(os.path.join(path, "laststatus"), "w") as f:
             f.write(str(charging_status))
-
 
     with open(os.path.join(path, "lastcapacity"), "w") as f:
         if charging_status == -1:

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+nvidia_temp=$(nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits)
+intel_temp=$(( $(cat "/sys/class/thermal/thermal_zone0/temp") / 1000 ))
+
+echo " $intel_temp/$nvidia_temp°C"

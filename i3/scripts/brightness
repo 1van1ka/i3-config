@@ -1,7 +1,10 @@
 #!/bin/bash
 
+step="2"
+
+
 if [[ "$1" -eq 1 ]]; then 
-    brightnessctl set "$2"%+ > /dev/null
+    brightnessctl set "$step"%+ > /dev/null
 elif [[ "$1" -eq -1 ]]; then 
-    brightnessctl set "$2"%- > /dev/null
+    brightnessctl set "$step"%- > /dev/null
 fi

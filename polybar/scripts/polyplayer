@@ -21,15 +21,17 @@ is_paused() {
 
 play_pause() {
     if is_playing; then
-        echo 
+        echo "%{F#dec800}%{F-}"
+    elif is_paused; then
+        echo "%{F#dec800}%{F-}"
     else
-        echo 
+    	echo ""
     fi
 }
 
-case $1 in 
+case $1 in
   previous)
-    is_playing && playerctl --player=$PLAYER previous 
+    is_playing && playerctl --player=$PLAYER previous
     ;;
   next)
     is_playing && playerctl --player=$PLAYER next

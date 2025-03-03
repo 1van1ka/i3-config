@@ -1,4 +1,5 @@
 set $mod Mod4
+set $mod2 Mod1
 
 font pango:monospace 13
 
@@ -10,7 +11,7 @@ font pango:monospace 13
 #                 background #2F2F2F
 #                 statusline #eeeeee
 #                 separator #c2c0c0
-# 
+#
 #                 focused_workspace #ad0000 #000000 #ffffff
 #                 active_workspace #2F2D3A #2F2F2F #ffffff
 #                 inactive_workspace #2F2F2F #2F2F2F #6b6a6a
@@ -20,13 +21,14 @@ font pango:monospace 13
 
 
 #--- autostart ---------------------------------------------------
+exec --no-startup-id picom --config ~/.config/picom
 exec --no-startup-id dex --autostart --environment i3
 exec dunst &
 exec --no-startup-id ~/.fehbg
-# exec --no-startup-id picom --config ~/.config/picom
 exec --no-startup-id polybar
-exec --no-startup-id telegram-desktop -startintray
-exec --no-startup-id blueman-tray
+exec --no-startup-id nm-applet
+exec --no-startup-id flameshot
+exec --no-startup-id udiskie --smart-tray
 exec --no-startup-id ~/.config/i3/scripts/BatteryAlert
 
 # Position workspaces on motitors
@@ -44,7 +46,7 @@ workspace 10 output HDMI-1
 
 #--- desk binding --------------------------------------
 assign [class="firefox"] $ws1
-assign [class="okular"] $ws6
+assign [class="Evince"] $ws6
 assign [class="Telegram"] $ws4
 assign [class="discord"] $ws4
 assign [class="com.github.th_ch.youtube_music"] $ws7
@@ -60,6 +62,17 @@ for_window [class="Thunar"] floating enable
 for_window [class="Thunar"] resize set 1000 600
 for_window [class="Thunar"] move absolute position center
 for_window [class="Thunar"] focus
+
+for_window [class="Yad"] floating enable
+for_window [class="Yad"] resize set 500 300
+for_window [class="Yad"] move absolute position center
+for_window [class="Yad"] focus
+
+
+for_window [class="guvcview"] floating enable
+for_window [class="guvcview"] resize set 500 300
+for_window [class="guvcview"] move absolute position center
+
 
 # for_window [class="TelegramDesktop"] floating enable
 # for_window [class="TelegramDesktop"] move absolute position center
@@ -78,7 +91,7 @@ for_window [class="Thunar"] focus
 
 #--- gaps -------------------------------------------------------
 gaps inner 12
-gaps outer -7
+gaps outer -9
 smart_gaps off
 
 
@@ -106,14 +119,13 @@ client.placeholder              #292c37 #292c37 #292c37 #292c37
 
 
 #--- laptop binds -----------------------------------
-bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.config/i3/scripts/audio 1 2
-bindsym XF86AudioLowerVolume exec --no-startup-id ~/.config/i3/scripts/audio -1 2
-bindsym XF86AudioMute exec --no-startup-id ~/.config/i3/scripts/audio 0 
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ mode_toggle
+bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.config/i3/scripts/audio speaker 1
+bindsym XF86AudioLowerVolume exec --no-startup-id ~/.config/i3/scripts/audio speaker -1
+bindsym XF86AudioMute exec --no-startup-id ~/.config/i3/scripts/audio speaker 0
+bindsym XF86AudioMicMute exec --no-startup-id ~/.config/i3/scripts/audio micro 0
 
-bindsym XF86MonBrightnessUp exec --no-startup-id ~/.config/i3/scripts/brightness 1 2
-bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/scripts/brightness -1 2
-
+bindsym XF86MonBrightnessUp exec --no-startup-id ~/.config/i3/scripts/brightness 1
+bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/scripts/brightness -1
 
 floating_modifier $mod
 
@@ -124,23 +136,21 @@ tiling_drag modifier titlebar
 
 #--- binds to start applications -------------------------------------------
 bindsym $mod+Return exec --no-startup-id kitty
-bindsym $mod+d exec --no-startup-id dmenu_run
+bindsym $mod+d exec --no-startup-id ~/.config/rofi/launcher.sh
+bindsym $mod+Shift+d exec --no-startup-id ~/.config/rofi/commands.sh
+bindsym $mod+Tab exec --no-startup-id ~/.config/rofi/windows.sh
 bindsym $mod+b exec --no-startup-id firefox
-bindsym $mod+o exec --no-startup-id wlogout
+bindsym $mod+o exec --no-startup-id ~/.config/rofi/powermenu
 bindsym $mod+e exec --no-startup-id thunar
 bindsym $mod+Shift+p exec --no-startup-id kitty ~/.config/i3/scripts/WG_gui_py
 bindsym $mod+p exec --no-startup-id lxrandr
 bindsym $mod+m exec --no-startup-id ~/.config/i3/scripts/notifier
-bindsym $mod+n exec --no-startup-id killall polybar && polybar
+bindsym $mod+n exec --no-startup-id ~/.config/i3/scripts/wide
 
 
-bindsym Shift+Print exec ~/.config/i3/scripts/screenshoter area
-bindsym $mod+Print exec ~/.config/i3/scripts/screenshoter window
-bindsym $mod+Shift+Print exec ~/.config/i3/scripts/screenshoter full
-
+bindsym Print exec flameshot gui
 
 bindsym $mod+q kill
-bindsym $mod+Shift+q exec --no-startup-id xdotool getactivewindow getwindowpid $(xdotool getactivewindow) | xargs kill
 
 
 bindsym $mod+Shift+minus move scratchpad
@@ -237,14 +247,16 @@ bindsym $mod+Shift+r restart
 
 
 
-#--- exit I3 -------------------------------------------------
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
-
-
 
 #--- binds to resize window -------------------------------------------
-bindsym $mod+r mode "resize"
 
+bindsym $mod+Mod1+l resize shrink width 1 px or 1 ppt
+bindsym $mod+Mod1+j resize grow height 1 px or 1 ppt
+bindsym $mod+Mod1+k resize shrink height 1 px or 1 ppt
+bindsym $mod+Mod1+h resize grow width 1 px or 1 ppt
+
+
+# bindsym $mod+r mode "resize"
 mode "resize" {
 
         bindsym l resize shrink width 1 px or 1 ppt

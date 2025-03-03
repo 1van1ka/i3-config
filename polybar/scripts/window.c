@@ -163,16 +163,14 @@ int main(void) {
 
     if ((display = XOpenDisplay(NULL)) == NULL) {
         puts("Can not connect to the X server!\n");
-        exit(1);
     }
 
     XEvent event;
     Window rootwindow;
     u_long count;
-    unsigned short int maxLength = 65;
+    unsigned short int maxLength = 67;
 
     char *out = NULL;
-
     char *lastOut = NULL;
 
     while (1) {
@@ -242,6 +240,9 @@ int main(void) {
         free(classCounts);
 
         if (strlen(out) > maxLength) {
+            out[maxLength-3] = '.';
+            out[maxLength-2] = '.';
+            out[maxLength-1] = '.';
             out[maxLength] = '\0';
         }
 

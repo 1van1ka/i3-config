@@ -36,7 +36,7 @@ def get_wireguard_interface() -> list[str]:
 
 
 def main():
-	directory = '/home/user/Downloads/'
+	directory = '/home/ivanika/.config/WGfaces/'
 	files = list(os.listdir(directory))
 
 	conf_files = {index: file for index, file in enumerate(files) if ".conf" in file}
@@ -75,7 +75,7 @@ def main():
 					print("Найденные интерфейсы WireGuard:")
 					for interface in get_wireguard_interface():
 						print(interface)
-					
+
 					print()
 					for interface_name in get_wireguard_interface():
 						os.system(f"sudo wg-quick down '{directory}{interface_name}.conf'")

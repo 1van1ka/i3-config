@@ -1,13 +1,16 @@
 #!/bin/bash
 
-statusLine=$(amixer get Master | tail -n 1)
+statusLine=$(amixer get Capture | tail -n 1)
 status=$(echo "${statusLine}" | grep -wo "on")
 volume=$(echo "${statusLine}" | awk '{print $5}' | tr -d '[]%')
-prefix="󰕾"
+prefix="󰍬"
 
 
 if [[ $volume -ge 100 ]]; then
     text="max"
+
+elif [[ $volume -eq 0 ]]; then 
+    text="off"
 
 elif [[ $volume -lt 10 ]]; then
     text="min"
@@ -20,7 +23,7 @@ fi
 
 if [[ -z "${status}" ]]; then
     text="%{F#757575}$text%{F-}"
-    prefix="󰖁"
+    prefix="󰍭"
 fi
 
 echo "$prefix $text"

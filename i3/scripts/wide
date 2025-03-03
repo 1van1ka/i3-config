@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+if pgrep plank > /dev/null || pgrep polybar > /dev/null; then
+    pkill plank
+    pkill polybar
+else
+    plank &
+    polybar &
+fi
