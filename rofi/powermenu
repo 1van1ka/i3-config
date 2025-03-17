@@ -42,6 +42,10 @@ run_rofi() {
 	echo -e "$lock\n$suspend\n$logout\n$reboot\n$shutdown" | rofi_cmd
 }
 
+run_lock() {
+	i3lock -k -f --image="/home/$USER/.config/i3/wallpapers/i3lock.png"
+}
+
 # Execute Command
 run_cmd() {
 	selected="$(confirm_exit)"
@@ -52,8 +56,9 @@ run_cmd() {
 			systemctl reboot
 		elif [[ $1 == '--suspend' ]]; then
 			mpc -q pause
-			amixer set Master mute
 			systemctl suspend
+			sleep 3
+			run_lock
 		elif [[ $1 == '--logout' ]]; then
 			if [[ "$DESKTOP_SESSION" == 'openbox' ]]; then
 				openbox --exit
@@ -61,8 +66,6 @@ run_cmd() {
 				bspc quit
 			elif [[ "$DESKTOP_SESSION" == 'i3' ]]; then
 				i3-msg exit
-			elif [[ "$DESKTOP_SESSION" == 'plasma' ]]; then
-				qdbus org.kde.ksmserver /KSMServer logout 0 0 0
 			fi
 		fi
 	else
@@ -83,7 +86,7 @@ case ${chosen} in
 		if [[ -x '/usr/bin/betterlockscreen' ]]; then
 			betterlockscreen -l
 		elif [[ -x '/usr/bin/i3lock' ]]; then
-			i3lock -k -f --image="/home/$USER/.config/i3/wallpapers/i3lock.png"
+			run_lock
 		fi
         ;;
     $suspend)

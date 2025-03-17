@@ -12,7 +12,7 @@
 /*****----- Configuration -----*****/
 configuration {
     show-icons:                 false;
-	window-format:              "{w} {c} {t}";
+	window-format:              "{w} {c}\t\t{t}";
 }
 
 /*****----- Global Properties -----*****/
@@ -27,7 +27,7 @@ window {
     location:                    west;
     anchor:                      west;
     fullscreen:                  false;
-    width:                       500px;
+    width:                       600px;
     height:                      100%;
     x-offset:                    0px;
     y-offset:                    0px;
@@ -73,7 +73,7 @@ entry {
     enabled:                     true;
     expand:                      true;
     border-radius:               0px;
-    background-color:            @background-alt;
+    background-color:            transparent;
     text-color:                  inherit;
     cursor:                      text;
     placeholder:                 "Search...";
@@ -134,7 +134,7 @@ element selected.active {
 element-icon {
     background-color:            transparent;
     text-color:                  inherit;
-    size:                        30px;
+    size:                        27px;
     cursor:                      inherit;
 }
 element-text {

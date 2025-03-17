@@ -3,28 +3,15 @@
 BATTERY=0
 URGENT_VALUE=35
 CRITICAL_VALUE=20
-desired_length=12
+desired_length=20
 
 
 BATTERY_INFO=$(acpi -b | grep "Battery ${BATTERY}")
 BATTERY_STATE=$(echo "${BATTERY_INFO}" | grep -wo "Full\|Charging\|Discharging")
 BATTERY_POWER=$(echo "${BATTERY_INFO}" | grep -o '[0-9]\+%' | tr -d '%')
 BATTERY_TIME=$(echo "${BATTERY_INFO}" | grep "remaining" | awk '{print $5}' | cut -d':' -f1,2)
-BATTERY_CHARGE_RATE=$(echo $(( $(cat /sys/class/power_supply/BAT0/current_now) * $(cat /sys/class/power_supply/BAT0/voltage_now) / 1000000000000 )))
+BATTERY_CHARGE_RATE=$(echo $(( $(cat /sys/class/power_supply/BAT0/current_now) * $(cat /sys/class/power_supply/BAT0/voltage_now) / 1000000 / 1000000 )))
 
-
-format_output() {
-    local text="$1"
-    local text_length=${#text}
-    if [ $text_length -lt $desired_length ]; then
-        local total_padding=$((desired_length - text_length))
-        local left_padding=$((total_padding / 2))
-        local right_padding=$((total_padding - left_padding))
-        printf "%${left_padding}s%s%${right_padding}s\n" "" "$text" ""
-    else
-        echo "$text"
-    fi
-}
 
 if [[ -n "$BATTERY_INFO" ]]; then 
     if [[ "${BATTERY_STATE}" = "Charging" ]]; then
@@ -45,6 +32,4 @@ else
     output="No Battery"
 fi
 
-format_output "${output}"
-
-
+echo "${output}"

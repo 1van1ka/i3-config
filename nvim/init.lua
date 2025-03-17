@@ -8,12 +8,9 @@ require('packer').startup(function(use)
     use 'hrsh7th/cmp-cmdline'
     use 'L3MON4D3/LuaSnip'
     use 'nvim-tree/nvim-tree.lua'
-    use {
-        'nvim-telescope/telescope.nvim', tag = '0.1.8',
-        requires = {{'nvim-lua/plenary.nvim'}}
-    }
     use 'Pocco81/auto-save.nvim'
     use 'morhetz/gruvbox'
+    use 'mackr/vim-clipboard'
 end)
 vim.o.clipboard = 'unnamedplus'
 vim.cmd 'colorscheme gruvbox'
@@ -34,10 +31,6 @@ vim.api.nvim_set_keymap('n', '<C-n>', ':NvimTreeToggle<CR>', { noremap = true, s
 
 local lspconfig = require('lspconfig')
 local cmp = require('cmp')
-
-local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
 
 cmp.setup({
     snippet = {

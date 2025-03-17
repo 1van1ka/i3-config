@@ -1,5 +1,7 @@
 set $mod Mod4
 set $mod2 Mod1
+set $stepToSizeMove 30
+
 
 font pango:monospace 13
 
@@ -21,7 +23,7 @@ font pango:monospace 13
 
 
 #--- autostart ---------------------------------------------------
-exec --no-startup-id picom --config ~/.config/picom
+exec --no-startup-id picom --config ~/.config/picom/picom.conf
 exec --no-startup-id dex --autostart --environment i3
 exec dunst &
 exec --no-startup-id ~/.fehbg
@@ -38,7 +40,7 @@ workspace 3 output eDP-1
 workspace 4 output eDP-1
 workspace 5 output eDP-1
 workspace 6 output eDP-1
-workspace 7 output eDP-1
+workspace 7 output HDMI-1
 workspace 8 output HDMI-1
 workspace 9 output HDMI-1
 workspace 10 output HDMI-1
@@ -49,66 +51,25 @@ assign [class="firefox"] $ws1
 assign [class="Evince"] $ws6
 assign [class="Telegram"] $ws4
 assign [class="discord"] $ws4
-assign [class="com.github.th_ch.youtube_music"] $ws7
-
-
-
-# #--- applications ----------------------------------------
-for_window [class="vlc"] floating enable
-for_window [class="vlc"] resize set 900 600
-for_window [class="vlc"] move absolute position center
-
-for_window [class="Thunar"] floating enable
-for_window [class="Thunar"] resize set 1000 600
-for_window [class="Thunar"] move absolute position center
-for_window [class="Thunar"] focus
-
-for_window [class="Yad"] floating enable
-for_window [class="Yad"] resize set 500 300
-for_window [class="Yad"] move absolute position center
-for_window [class="Yad"] focus
-
-
-for_window [class="guvcview"] floating enable
-for_window [class="guvcview"] resize set 500 300
-for_window [class="guvcview"] move absolute position center
-
-
-# for_window [class="TelegramDesktop"] floating enable
-# for_window [class="TelegramDesktop"] move absolute position center
-
-# for_window [class="Viewnior"] floating enable
-# for_window [class="Viewnior"] move absolute position center
-
-# for_window [class="mpv"] floating enable
-# for_window [class="mpv"] resize set 1200 900
-# for_window [class="mpv"] move absolute position center
-
-
-
-# #--- focus in appps -----------------------------
-# for_window [class="Lutris"] focus
 
 #--- gaps -------------------------------------------------------
-gaps inner 12
-gaps outer -9
-smart_gaps off
+gaps inner 8
+gaps outer -4
+
+
+#--- window settings -------------------------------------------
+for_window [tiling] border pixel 3
+for_window [floating] border pixel 3 \
+move absolute position center
+
+focus_follows_mouse no
+
+bindsym $mod+u split v
+bindsym $mod+i split h
+bindsym $mod+f fullscreen toggle
 
 
 
-#--- off border -----------------------------------
-default_border pixel 0
-
-
-
-#--- size window -------------------------------------------
-for_window [tiling] border pixel 2
-for_window [floating] border pixel 2
-
-
-
-#--- smart borders off ---------------
-smart_borders on
 #                       Рамка   Фон   Индикатор Родительская_рамка
 client.focused                  #e1e2e6 #db1904 #e1e2e6 #e1e2e6
 client.focused_inactive         #292c37 #292c37 #292c37 #292c37
@@ -123,15 +84,14 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.config/i3/scripts/audio spe
 bindsym XF86AudioLowerVolume exec --no-startup-id ~/.config/i3/scripts/audio speaker -1
 bindsym XF86AudioMute exec --no-startup-id ~/.config/i3/scripts/audio speaker 0
 bindsym XF86AudioMicMute exec --no-startup-id ~/.config/i3/scripts/audio micro 0
-
 bindsym XF86MonBrightnessUp exec --no-startup-id ~/.config/i3/scripts/brightness 1
 bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/scripts/brightness -1
+bindsym Shift+XF86AudioMute exec ~/.config/i3/scripts/audio micro 0
+bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id ~/.config/i3/scripts/audio micro 1
+bindsym Shift+XF86AudioLowerVolume exec --no-startup-id ~/.config/i3/scripts/audio micro -1
 
 floating_modifier $mod
 
-
-#--- move window on title -------------------
-tiling_drag modifier titlebar
 
 
 #--- binds to start applications -------------------------------------------
@@ -140,21 +100,16 @@ bindsym $mod+d exec --no-startup-id ~/.config/rofi/launcher.sh
 bindsym $mod+Shift+d exec --no-startup-id ~/.config/rofi/commands.sh
 bindsym $mod+Tab exec --no-startup-id ~/.config/rofi/windows.sh
 bindsym $mod+b exec --no-startup-id firefox
-bindsym $mod+o exec --no-startup-id ~/.config/rofi/powermenu
+bindsym $mod+Escape exec --no-startup-id ~/.config/rofi/powermenu
 bindsym $mod+e exec --no-startup-id thunar
 bindsym $mod+Shift+p exec --no-startup-id kitty ~/.config/i3/scripts/WG_gui_py
-bindsym $mod+p exec --no-startup-id lxrandr
 bindsym $mod+m exec --no-startup-id ~/.config/i3/scripts/notifier
 bindsym $mod+n exec --no-startup-id ~/.config/i3/scripts/wide
 
-
 bindsym Print exec flameshot gui
-
-bindsym $mod+q kill
-
-
-bindsym $mod+Shift+minus move scratchpad
-bindsym $mod+minus scratchpad show
+bindsym $mod+Shift+q kill
+bindsym $mod+q move scratchpad
+bindsym $mod+p exec lxrandr
 
 
 
@@ -170,28 +125,9 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 
-
-#--- move window --------------------------------------------
-bindsym $mod+Shift+h move left
-bindsym $mod+Shift+j move down
-bindsym $mod+Shift+k move up
-bindsym $mod+Shift+l move right
-
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
-
-
-
-#--- full size window ----------------------------------------------------
-bindsym $mod+f fullscreen toggle
-
-
-
 #--- toogle to floating mode -------------------------
-bindsym $mod+Shift+V floating toggle
-bindsym $mod+V focus mode_toggle
+bindsym $mod+Shift+v floating toggle
+bindsym $mod+v focus mode_toggle
 
 
 
@@ -210,52 +146,52 @@ set $ws10 "10"
 
 
 #--- switch to workspace ------------------------------------
-bindsym $mod+1 workspace number $ws1
-bindsym $mod+2 workspace number $ws2
-bindsym $mod+3 workspace number $ws3
-bindsym $mod+4 workspace number $ws4
-bindsym $mod+5 workspace number $ws5
-bindsym $mod+6 workspace number $ws6
-bindsym $mod+7 workspace number $ws7
-bindsym $mod+8 workspace number $ws8
-bindsym $mod+9 workspace number $ws9
-bindsym $mod+0 workspace number $ws10
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
 
 
 
 #--- move window to any workspace  ------------------------
-bindsym $mod+Shift+1 move container to workspace number $ws1
-bindsym $mod+Shift+2 move container to workspace number $ws2
-bindsym $mod+Shift+3 move container to workspace number $ws3
-bindsym $mod+Shift+4 move container to workspace number $ws4
-bindsym $mod+Shift+5 move container to workspace number $ws5
-bindsym $mod+Shift+6 move container to workspace number $ws6
-bindsym $mod+Shift+7 move container to workspace number $ws7
-bindsym $mod+Shift+8 move container to workspace number $ws8
-bindsym $mod+Shift+9 move container to workspace number $ws9
-bindsym $mod+Shift+0 move container to workspace number $ws10
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
 
 
 
-#--- restart config file ----------------------------------------
+#--- actions I3 ----------------------------------------
 bindsym $mod+Shift+c reload
-
-
-
-#--- restart I3 --------------------------------------------------
 bindsym $mod+Shift+r restart
 
 
-
-
 #--- binds to resize window -------------------------------------------
+bindsym $mod+$mod2+l resize shrink width $stepToSizeMove px
+bindsym $mod+$mod2+j resize grow height $stepToSizeMove px
+bindsym $mod+$mod2+k resize shrink height $stepToSizeMove px
+bindsym $mod+$mod2+h resize grow width $stepToSizeMove px
 
-bindsym $mod+Mod1+l resize shrink width 1 px or 1 ppt
-bindsym $mod+Mod1+j resize grow height 1 px or 1 ppt
-bindsym $mod+Mod1+k resize shrink height 1 px or 1 ppt
-bindsym $mod+Mod1+h resize grow width 1 px or 1 ppt
+#--- binds to move window -------------------------------------------
+bindsym $mod+Shift+h move left $stepToSizeMove px
+bindsym $mod+Shift+l move right $stepToSizeMove px
+bindsym $mod+Shift+k move up $stepToSizeMove px
+bindsym $mod+Shift+j move down $stepToSizeMove px
 
 
+# NOT USING
 # bindsym $mod+r mode "resize"
 mode "resize" {
 

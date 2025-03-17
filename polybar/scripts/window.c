@@ -131,31 +131,18 @@ Window WActive(Display *display) {
 }
 
 char *WName(Display *display, Window window) {
-    Atom actual_type_return;
-    int actual_format_return;
-    u_long nitems_return = 0;
-    u_long bytes_after_return = 0;
-    u_char *name = NULL;
-    Status status = XGetWindowProperty(
-        display,
-        window,
-        XInternAtom(display, "WM_CLASS", False),
-        0L,
-        ~0L,
-        False,
-        AnyPropertyType,
-        &actual_type_return,
-        &actual_format_return,
-        &nitems_return,
-        &bytes_after_return,
-        &name
-    );
+    XClassHint classHint;
+    int status = XGetClassHint(display, window, &classHint);
 
-    if (status != Success) {
+    if (status == 0) {
         return NULL;
     }
 
-    return (char *)name;
+    char *className = strdup(classHint.res_class);
+    XFree(classHint.res_name);
+    XFree(classHint.res_class);
+
+    return className;
 }
 
 int main(void) {
@@ -163,20 +150,22 @@ int main(void) {
 
     if ((display = XOpenDisplay(NULL)) == NULL) {
         puts("Can not connect to the X server!\n");
+        return 1;
     }
 
     XEvent event;
     Window rootwindow;
     u_long count;
-    unsigned short int maxLength = 67;
+    unsigned short int maxLength = 70;
 
     char *out = NULL;
     char *lastOut = NULL;
 
+    // Set up event mask to capture FocusIn and FocusOut events
+    rootwindow = DefaultRootWindow(display);
+    XSelectInput(display, rootwindow, SubstructureNotifyMask | FocusChangeMask);
+
     while (1) {
-        rootwindow = DefaultRootWindow(display);
-        XSelectInput(display, rootwindow, SubstructureNotifyMask);
-        int status;
         count = 0;
         Window *wlist = WList(display, &count);
         Window wactive = WActive(display);
@@ -221,11 +210,16 @@ int main(void) {
         }
 
         for (int i = 0; i < classCountSize; ++i) {
-            out = (char *)realloc(out, strlen(out) +
-                                  strlen(classCounts[i].className) +
-                                  strlen(":") + 20
-                                  );
-            strcat(out, classCounts[i].className);
+            char *className = classCounts[i].className;
+            if (wactive && strcmp(className, WName(display, wactive)) == 0) {
+                out = (char *)realloc(out, strlen(out) + strlen(className) + 7);
+                strcat(out, "{");
+                strcat(out, className);
+                strcat(out, "}");
+            } else {
+                out = (char *)realloc(out, strlen(out) + strlen(className) + 5);
+                strcat(out, className);
+            }
             char windowCountStr[10];
             sprintf(windowCountStr, "%d", classCounts[i].count);
             strcat(out, ":");
@@ -233,6 +227,7 @@ int main(void) {
             strcat(out, "  ");
         }
 
+        if (!strcmp(out, "")) strcpy(out, "no active apps");
         if (wlist) XFree(wlist);
         for (int i = 0; i < classCountSize; ++i) {
             free(classCounts[i].className);
@@ -240,12 +235,11 @@ int main(void) {
         free(classCounts);
 
         if (strlen(out) > maxLength) {
-            out[maxLength-3] = '.';
-            out[maxLength-2] = '.';
-            out[maxLength-1] = '.';
+            out[maxLength - 3] = '.';
+            out[maxLength - 2] = '.';
+            out[maxLength - 1] = '.';
             out[maxLength] = '\0';
         }
-
 
         if (lastOut == NULL || strcmp(lastOut, out) != 0) {
             printf("%s\n", out);
@@ -263,5 +257,5 @@ int main(void) {
     }
 
     XCloseDisplay(display);
-    exit(0);
+    return 0;
 }

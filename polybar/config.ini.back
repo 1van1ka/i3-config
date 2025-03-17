@@ -16,44 +16,33 @@
 ;
 ;==========================================================
 
-[colors]
-background = #282A2E
-background-alt = #373B41
-foreground = #C5C8C6
-primary = #F0C674
-secondary = #8ABEB7
-alert = #BE0000
-disabled = #707880
+include-file = ./colors.ini
 
 [bar/example]
 width = 100%
-height = 15pt
-radius = 1
+height = 16px
+radius = 0
+top = true
 
-background = ${colors.background}
-foreground = ${colors.foreground}
-
-line-size = 3pt
-border-size = 0pt
-border-color = #00000000
+background = ${colors.bg}
+foreground = ${colors.fg}
 
 padding-left = 0
 padding-right = 1
-module-margin = 1
+module-margin = 0px
 
-separator = |
-separator-foreground = ${colors.disabled}
+separator = ""
 
-font-0 = JetBrainsMono:size=11;3
-font-1 = HackNerdFont:size=16;3
+font-0 = JetBrains Mono:size=11;3
+font-1 = HackNerdFont:size=11;3
 
-fixed-center = no
-modules-left = xworkspaces
-modules-center = pp ppp pn pt
-modules-right = tray pulseaudio backlight xkeyboard memory filesystem cpu temp wgactive wlan battery date
+fixed-center = yes
+modules-center = date
+modules-left = power xworkspaces maximize scratchpad window
+modules-right = pp ppp pn audio micro brightness xkeyboard memory cpu cputemp battery network wireguard notify tray
 
 cursor-click = pointer
-cursor-scroll = ns-resize
+cursor-scroll = pointer
 
 enable-ipc = true
 
@@ -61,144 +50,146 @@ enable-ipc = true
 type = internal/xworkspaces
 
 label-active = %name%
-label-active-background = ${colors.background-alt}
-label-active-underline= ${colors.primary}
-label-active-padding = 1
+label-active-background = ${colors.bg-alt}
+label-active-padding = 5px
 
 label-occupied = %name%
-label-occupied-padding = 1
+label-occupied-padding = 5px
 
 label-urgent = %name%
 label-urgent-background = ${colors.alert}
-label-urgent-padding = 1
+label-urgent-padding = 5px
 
-label-empty = %name%
-label-empty-foreground = ${colors.disabled}
-label-empty-padding = 1
+[module/scratchpad]
+type = custom/text
+label = 󱂬 
+click-left = i3-msg move scratchpad
+click-right = i3-msg floating toggle
 
-[module/xwindow]
-type = internal/xwindow
-label = %title:0:35:%
-
-[module/filesystem]
-type = internal/fs
-interval = 3
-mount-0 = /
-label-mounted = / %used%
-
-[module/backlight]
-type = internal/backlight
-card = intel_backlight
-use-actual-brightness = true
+[module/window]
+type = custom/script
+exec = ~/.config/polybar/scripts/window
 format = <label>
-label = %percentage%%
-interval = 0
+tail = true
+label = %output%
+click-right = ~/.config/rofi/windows.sh
+click-left = ~/.config/rofi/launcher.sh
 
-[module/pulseaudio]
-type = internal/pulseaudio
-format-volume-prefix-foreground = ${colors.primary}
-format-volume = <label-volume>
-label-volume = %percentage%%
-label-muted = %percentage%%
-label-muted-foreground = ${colors.disabled}
-interval = 0.01
+[module/brightness]
+type = custom/script
+exec = ~/.config/polybar/scripts/brightness
+scroll-up = ~/.config/i3/scripts/brightness 1
+scroll-down = ~/.config/i3/scripts/brightness -1
+label = %output%
+interval = 1
+
+[module/audio]
+type = custom/script
+exec = ~/.config/polybar/scripts/audio
+interval = 1
+scroll-up = ~/.config/i3/scripts/audio speaker 1
+scroll-down = ~/.config/i3/scripts/audio speaker -1
+click-left = ~/.config/i3/scripts/audio speaker 0
+click-right = pavucontrol
+
+[module/micro]
+type = custom/script
+exec = ~/.config/polybar/scripts/micro
+interval = 1
+scroll-up = ~/.config/i3/scripts/audio micro 1
+scroll-down = ~/.config/i3/scripts/audio micro -1
+click-left = ~/.config/i3/scripts/audio micro 0
+click-right = pavucontrol
 
 [module/xkeyboard]
-type = internal/xkeyboard
-blacklist-0 = num lock
-label-layout = %layout%
-label-layout-foreground = ${colors.primary}
-label-indicator-padding = 2
-label-indicator-margin = 1
-label-indicator-foreground = ${colors.background}
-label-indicator-background = ${colors.secondary}
+type = custom/script
+exec = ~/.config/polybar/scripts/layoutkb
+interval = 0.3
+label = %output%
 
 [module/memory]
-type = internal/memory
-interval = 1
-label = %used%
-
-[module/cpu]
-type = internal/cpu
-interval = 1
-label = %percentage:2%%
-
-[module/wlan]
-type = internal/network
-interface-type = wireless
-format-connected = <label-connected>
-label-connected = %essid%
-label-disconnected = dN
+type = custom/script
+exec = ~/.config/polybar/scripts/memory
+label=%output%
 interval = 0.5
 
-[module/lan]
-type = internal/network
-interface-type = wired
-interval = 1.0
-label-connected = %{F#F0C674}%local_ip%
+[module/power]
+type = custom/text
+click-left = ~/.config/rofi/powermenu
+label = 
+label-padding = 7px
+
+[module/cpu]
+type = custom/script
+exec = ~/.config/polybar/scripts/cpu
+label=%output%
+interval = 0.5
+format-foreground = ${colors.system}
+
+[module/cputemp]
+type = custom/script
+exec = ~/.config/polybar/scripts/cputemp
+label=%output%
+interval = 0.5
 
 [module/battery]
-type = internal/battery
-label-charging = C %percentage%% %consumption%W
-label-discharging = %percentage%% %time% 
-format-low-foreground = ${colors.alert}
-format-low = <label-low>
-time-format = %H:%M
-label-low = %percentage%% %time%
-battery = BAT0
-low-at = 35
-adapter = ADP1
-poll-interval = 1
-interval = 1
+type = custom/script
+exec = ~/.config/polybar/scripts/battery
+label = %output%
+interval = 3
 
+[module/notify]
+type = custom/script
+exec = ~/.config/polybar/scripts/notify
+interval = 5
+click-left = ~/.config/polybar/scripts/notify 1
+click-right = ~/.config/polybar/scripts/notify 2
+
+[module/network]
+type = custom/script
+exec = ~/.config/polybar/scripts/network
+interval = 3
 
 [module/date]
-type = internal/date
-interval = 1
-date = %d/%m/%Y %H:%M:%S
-label = %date%
-label-foreground = ${colors.primary}
+type = custom/script
+exec = ~/.config/polybar/scripts/datetime
+label=%output%
+click-left = ~/.config/polybar/scripts/weather
+interval = 10
 
 [module/tray]
 type = internal/tray
 format-margin = 0px
-tray-spacing = 12px
-
-[module/temp]
-type = internal/temperature
-thermal-zone = 0
-warn-temperature = 70
-hwmon-path = /sys/class/thermal/thermal_zone0/temp
-zone-type = x86_pkg_temp
-label-warn-foreground = #f00
+tray-spacing = 10px
 
 [module/pp]
 type = custom/text
-content = 
+label = 
 click-left = ~/.config/polybar/scripts/polyplayer previous
 
 [module/pn]
 type = custom/text
-content = 
+label = 
 click-left = ~/.config/polybar/scripts/polyplayer next
 
 [module/ppp]
 type = custom/script
-interval = 0.2
+interval = 2
 exec = ~/.config/polybar/scripts/polyplayer play_pause
 click-left = ~/.config/polybar/scripts/polyplayer play-pause
 
 [module/pt]
 type = custom/script
-interval = 1
-exec = ~/.config/polybar/scripts/polyplayer title
+exec = ~/.config/polybar/scripts/playertitle
 format = <label>
-label = %output:30:30%
+tail = true
+label = %output%
+label-padding = 10px
 
-[module/wgactive]
+[module/wireguard]
 type = custom/script
-exec = ~/.config/polybar/scripts/wgactive
-interval = 2
+exec = ~/.config/polybar/scripts/wireguard
+interval = 5
 
 [settings]
 screenchange-reload = true

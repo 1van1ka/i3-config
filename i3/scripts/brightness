@@ -4,7 +4,7 @@ step="2"
 
 
 if [[ "$1" -eq 1 ]]; then 
-    brightnessctl set "$step"%+ > /dev/null
+    brightnessctl --class=backlight s "$step"%+ > /dev/null
 elif [[ "$1" -eq -1 ]]; then 
-    brightnessctl set "$step"%- > /dev/null
+    brightnessctl --class=backlight s "$step"%- > /dev/null
 fi

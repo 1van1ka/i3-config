@@ -30,9 +30,7 @@ format_output() {
     local text_length=${#text}
     if [ $text_length -lt $desired_length ]; then
         local total_padding=$((desired_length - text_length))
-        local right_padding=$((total_padding / 2))
-        local left_padding=$((total_padding - right_padding))
-        printf "%${left_padding}s%s%${right_padding}s\n" "" "$text" ""
+        printf "%s%${total_padding}s\n" "$text" ""
     else
         echo "$text"
     fi

@@ -1,0 +1,15 @@
+#/bin/bash
+
+cpu_temp=$(cat /sys/class/thermal/thermal_zone0/temp)
+cpu_temp=$((cpu_temp / 1000))
+
+if [ $cpu_temp -gt 90 ]; then
+    cpu_temp="%{F#FF0000}$cpu_temp°C%{F-}"
+elif [ $cpu_temp -gt 70 ]; then
+    cpu_temp="%{F#FFAA00}$cpu_temp°C%{F-}"
+else
+    cpu_temp="$cpu_temp°C"
+fi
+
+echo " $cpu_temp"
+
